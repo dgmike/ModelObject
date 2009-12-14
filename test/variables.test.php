@@ -3,13 +3,13 @@
 
 # A biblioteca PHPUnit deve estar instalada para rodar os testes
 require_once('config.php');
-require_once('PHPUnit.php');
+require_once('PHPUnit/Framework.php');
 
-class VariablesTest extends PHPUnit_TestCase
+class VariablesTest extends PHPUnit_Framework_TestCase
 {
     public function testSimples()
     {
-        $this->assertEquals('nome', 'nomea', 'Teste.');
+        $this->assertEquals('nome', 'nomea');
     }
 }
 
