@@ -1,11 +1,14 @@
 <?php
 function rodaTest($class)
 {
-    $suite  = new PHPUnit_Framework_TestSuite($class);
-    $result = PHPUnit::run($suite);
     if (count($_SERVER['argv'])) {
-        print PHP_EOL.$result->toString().PHP_EOL;
-    } else {
-        print $result->toHTML();
+        require_once('PHPUnit/Framework.php');
+        require_once('PHPUnit/TextUI/ResultPrinter.php');
+
+        $suite = new PHPUnit_Framework_TestSuite();
+        $suite->addTestSuite($class);
+        $result = $suite->run();
+        $reporter = new PHPUnit_TextUI_ResultPrinter;
+        $reporter->printResult($result);
     }
 }
