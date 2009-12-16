@@ -8,7 +8,11 @@ require_once('PHPUnit/Framework.php');
 
 class ConnectTest extends PHPUnit_Framework_TestCase
 {
-    
+    public function testSQLite()
+    {
+        $con = new Model_Object('sqlite:banco.db');
+        $this->assertFileExists('banco.db');
+    }
 }
 
 if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
