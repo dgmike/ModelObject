@@ -8,6 +8,12 @@ require_once('PHPUnit/Framework.php');
 
 class ConnectTest extends PHPUnit_Framework_TestCase
 {
+    public function tearDown()
+    {
+        if (file_exists('banco.db')) {
+            unlink('banco.db');
+        }
+    }
     public function testSQLite()
     {
         $con = new Model_Object('sqlite:banco.db');
