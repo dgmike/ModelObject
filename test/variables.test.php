@@ -7,10 +7,6 @@ require_once('PHPUnit/Framework.php');
 
 class VariablesTest extends PHPUnit_Framework_TestCase
 {
-    public function testSimples()
-    {
-        $this->assertEquals('nome', 'nomea');
-    }
 }
 
 if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
