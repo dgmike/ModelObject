@@ -1,4 +1,11 @@
 <?php
+set_include_path(realpath('..').PATH_SEPARATOR.get_include_path());
+
+define('TEST_MYSQL_DATAHOST', 'localhost');
+define('TEST_MYSQL_DATANAME', 'ice');
+define('TEST_MYSQL_USERNAME', 'ice');
+define('TEST_MYSQL_PASSWORD', 'ice');
+
 function rodaTest($class)
 {
     if (count($_SERVER['argv'])) {
