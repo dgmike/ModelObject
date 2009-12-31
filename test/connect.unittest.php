@@ -109,7 +109,7 @@ class ConnectTest extends PHPUnit_Framework_TestCase
         $con = new Model_Object('invalid');
     }
 
-    public function testPessoa ()
+    public function testConfigInObject()
     {
         $this->assertTrue(Model_Object::store($this->connections));
         $m_pessoa = new Pessoa;
