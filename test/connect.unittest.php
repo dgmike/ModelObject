@@ -6,37 +6,16 @@
 set_include_path(dirname(__FILE__).PATH_SEPARATOR.get_include_path());
 
 require_once('config.php');
-require_once('model/Object.php');
 require_once('PHPUnit/Framework.php');
 
 class ConnectTest extends PHPUnit_Framework_TestCase
 {
-    public $connections;
-
     public function setUp()
     {
-        $this->connections = array(
-                'default' => array(
-                    'dns'  => 'sqlite:banco.db',
-                ),
-                'extra' => array(
-                    'dns'  => $this->_dns('mysql'),
-                    'user' => TEST_MYSQL_USERNAME,
-                    'pass' => TEST_MYSQL_PASSWORD,
-                ),
-            );
-
         if (file_exists('banco.db')) {
             unlink('banco.db');
         }
-        $con = new PDO('sqlite:banco.db');
-        $sql = file_get_contents('banco.sql');
-        foreach (explode(';', $sql) as $instruction) {
-            if (!trim($instruction)) {
-                continue;
-            }
-            $con->exec($instruction);
-        }
+        _runSql();
     }
 
     public function tearDown()
@@ -46,17 +25,9 @@ class ConnectTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function _dns($type)
-    {
-        if ($type == 'sqlite')
-            return 'sqlite:banco.db';
-        if ($type == 'mysql')
-            return sprintf('mysql:host=%s;dbname=%s', TEST_MYSQL_DATAHOST, TEST_MYSQL_DATANAME);
-    }
-
     public function testSQLite()
     {
-        $con = new Model_Object($this->_dns('sqlite'));
+        $con = new Model_Object(_dns('sqlite'));
         $this->assertFileExists('banco.db');
         $this->assertEquals('object', gettype($con->_con));
         $this->assertEquals('PDO', get_class($con->_con));
@@ -64,16 +35,16 @@ class ConnectTest extends PHPUnit_Framework_TestCase
 
     public function testMySQL()
     {
-        $con = new Model_Object($this->_dns('mysql'), TEST_MYSQL_USERNAME, TEST_MYSQL_PASSWORD);
+        $con = new Model_Object(_dns('mysql'), TEST_MYSQL_USERNAME, TEST_MYSQL_PASSWORD);
         $this->assertEquals('object', gettype($con->_con));
         $this->assertEquals('PDO', get_class($con->_con));
     }
 
     public function testInterpretor()
     {
-        $con = new Model_Object($this->_dns('mysql'), TEST_MYSQL_USERNAME, TEST_MYSQL_PASSWORD);
+        $con = new Model_Object(_dns('mysql'), TEST_MYSQL_USERNAME, TEST_MYSQL_PASSWORD);
         $this->assertEquals('Model_Interpretor_Mysql', get_class($con->_interpretor));
-        $con2 = new Model_Object($this->_dns('sqlite'));
+        $con2 = new Model_Object(_dns('sqlite'));
         $this->assertEquals('Model_Interpretor_Sqlite', get_class($con2->_interpretor));
     }
 
@@ -93,7 +64,7 @@ class ConnectTest extends PHPUnit_Framework_TestCase
 
     public function testStoredConnection()
     {
-        $this->assertTrue(Model_Object::store($this->connections));
+        $this->assertTrue(Model_Object::store(_connections()));
         $con = new Model_Object('default');
         $this->assertFileExists('banco.db');
         $this->assertEquals('Model_Interpretor_Sqlite', get_class($con->_interpretor));
@@ -104,14 +75,14 @@ class ConnectTest extends PHPUnit_Framework_TestCase
 
     public function testStoredInvalidConnection()
     {
-        $this->assertTrue(Model_Object::store($this->connections));
+        $this->assertTrue(Model_Object::store(_connections()));
         $this->setExpectedException('Exception');
         $con = new Model_Object('invalid');
     }
 
     public function testConfigInObject()
     {
-        $this->assertTrue(Model_Object::store($this->connections));
+        $this->assertTrue(Model_Object::store(_connections()));
         $m_pessoa = new Pessoa;
         $this->assertEquals('Model_Interpretor_Mysql', get_class($m_pessoa->_interpretor));
     }

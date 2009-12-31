@@ -30,3 +30,38 @@ function rodaTest($class)
         $reporter->printResult($result);
     }
 }
+
+function _dns($type)
+{
+    if ($type == 'sqlite')
+        return 'sqlite:banco.db';
+    if ($type == 'mysql')
+        return sprintf('mysql:host=%s;dbname=%s', TEST_MYSQL_DATAHOST, 
+                       TEST_MYSQL_DATANAME);
+}
+
+function _runSql()
+{
+    $con = new PDO(_dns('sqlite'));
+    $sql = file_get_contents('banco.sql');
+    foreach (explode(';', $sql) as $instruction) {
+        if (!trim($instruction)) {
+            continue;
+        }
+        $con->exec($instruction);
+    }
+}
+
+function _connections()
+{
+    return array(
+            'default' => array(
+                'dns'  => _dns('sqlite'),
+            ),
+            'extra' => array(
+                'dns'  => _dns('mysql'),
+                'user' => TEST_MYSQL_USERNAME,
+                'pass' => TEST_MYSQL_PASSWORD,
+            ),
+        );
+}
