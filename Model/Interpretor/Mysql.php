@@ -3,8 +3,5 @@
 
 class Model_Interpretor_Mysql extends Model_Interpretor
 {
-    function select()
-    {
-        return true;
-    }
+    function select() { return true; }
 }

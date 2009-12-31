@@ -5,19 +5,26 @@ require_once('Interpretor.php');
 
 class Model_Object
 {
+    static $_stored = array();
     public $_con = false;
     public $_interoretor = false;
 
     public function __construct($dns=null, $user=null, $pass=null)
     {
-        if (!$dns AND defined('DATABASE_DNS')) {
-            $dns = DATABASE_DNS;
+        if ($dns and strpos($dns, ':') === false) {
+            //if (!isset(self::$_stored[$dns])) {
+            
+            //}
+            $connection = self::$_stored[$dns] +
+                          array('dns' => null, 'user' => null, 'pass' => null);
+            foreach (array( 'dns', 'user', 'pass' ) as $item) {
+                $$item = $connection[$item];
+            }
         }
-        if (!$user AND defined('DATABASE_USERNAME')) {
-            $user = DATABASE_USERNAME;
-        }
-        if (!$user AND defined('DATABASE_PASSOWRD')) {
-            $pass = DATABASE_PASSWORD;
+        foreach (array( 'dns', 'user', 'pass' ) as $item) {
+            if (!$$item AND defined('DATABASE_'.strtoupper($item))) {
+                $$item = constant('DATABASE_'.strtoupper($item));
+            }
         }
         $this->_interpretor = $this->getInterpretor($dns);
         $this->_con  = new PDO($dns, $user, $pass);
@@ -43,5 +50,11 @@ class Model_Object
             throw new Exception ('Interpretor class not found: '.$interpretor);
         }
         return new $interpretor;
+    }
+    
+    static function store (array $connections = array())
+    {
+        self::$_stored = $connections + self::$_stored;
+        return true;
     }
 }

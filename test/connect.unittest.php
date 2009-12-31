@@ -75,6 +75,29 @@ class ConnectTest extends PHPUnit_Framework_TestCase
     {
         $con = new Model_Object;
         $this->assertEquals('Model_Interpretor_Sqlite', get_class($con->_interpretor));
+        $this->assertFileExists('banco.db');
+    }
+    
+    public function testStoredConnection()
+    {
+        $connections = array(
+            'default' => array(
+                'dns'  => 'sqlite:banco.db',
+            ),
+            'extra' => array(
+                'dns'  => $this->_dns('mysql'),
+                'user' => TEST_MYSQL_USERNAME,
+                'pass' => TEST_MYSQL_PASSWORD,
+            ),
+        );
+
+        $this->assertTrue(Model_Object::store($connections));
+        $con = new Model_Object('default');
+        $this->assertFileExists('banco.db');
+        $this->assertEquals('Model_Interpretor_Sqlite', get_class($con->_interpretor));
+
+        $con2 = new Model_Object('extra');
+        $this->assertEquals('Model_Interpretor_Mysql', get_class($con2->_interpretor));
     }
 }
 
