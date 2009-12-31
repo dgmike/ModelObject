@@ -113,7 +113,6 @@ class ConnectTest extends PHPUnit_Framework_TestCase
     {
         $this->assertTrue(Model_Object::store($this->connections));
         $m_pessoa = new Pessoa;
-        $this->assertFileExists('banco.db');
         $this->assertEquals('Model_Interpretor_Mysql', get_class($m_pessoa->_interpretor));
     }
 }
