@@ -96,7 +96,7 @@ class ConnectTest extends PHPUnit_Framework_TestCase
 
     public function testElementsSetted()
     {
-        $m_telefone = new Telefone;
+        $m_telefone = new TelefoneFake;
         $this->assertEquals('telefone_id', $m_telefone->key);
         $this->assertEquals('telefones', $m_telefone->table);
     }
