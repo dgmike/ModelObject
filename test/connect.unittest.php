@@ -86,6 +86,20 @@ class ConnectTest extends PHPUnit_Framework_TestCase
         $m_pessoa = new Pessoa;
         $this->assertEquals('Model_Interpretor_Mysql', get_class($m_pessoa->_interpretor));
     }
+
+    public function testElements()
+    {
+        $m_pessoa = new Pessoa;
+        $this->assertEquals('id_pessoa', $m_pessoa->key);
+        $this->assertEquals('pessoa', $m_pessoa->table);
+    }
+
+    public function testElementsSetted()
+    {
+        $m_telefone = new Telefone;
+        $this->assertEquals('telefone_id', $m_telefone->key);
+        $this->assertEquals('telefones', $m_telefone->table);
+    }
 }
 
 if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {

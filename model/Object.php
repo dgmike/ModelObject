@@ -5,11 +5,14 @@ require_once('Interpretor.php');
 
 class Model_Object
 {
-    static $_stored = array();
+    static $_stored      = array();
 
-    public $_con = false;
+    public $_con         = false;
     public $_interpretor = false;
-    public $conection = false;
+
+    public $conection    = false;
+    public $table        = null;
+    public $key          = null;
 
     public function __construct($dns=null, $user=null, $pass=null)
     {
@@ -33,8 +36,29 @@ class Model_Object
         }
         $this->_interpretor = $this->getInterpretor($dns);
         $this->_con  = new PDO($dns, $user, $pass);
+        
+        $this->setTable();
+        $this->setKey();
     }
-    
+
+    public function setTable()
+    {
+        if (!$this->table) {
+            $object      = get_class($this);
+            $object      = strtolower($object);
+            $this->table = $object;
+        }
+    }
+
+    public function setKey()
+    {
+        if (!$this->key) {
+            $object    = get_class($this);
+            $object    = 'id_'.strtolower($object);
+            $this->key = $object;
+        }
+    }
+
     public function getInterpretor ($dns)
     {
         $interpretor = 'interpretor_'.reset(explode(':', $dns));
@@ -61,5 +85,15 @@ class Model_Object
     {
         self::$_stored = $connections + self::$_stored;
         return true;
+    }
+    
+    public function get($id, $table = null, $key = null)
+    {
+        foreach (array('table', 'key') as $item) {
+            if (!$$item) {
+                $$item = $this->$item;
+            }
+        }
+        $sql = $this->_interpretor->get($id, $key, $table);
     }
 }

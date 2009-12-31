@@ -3,5 +3,7 @@
 
 abstract class Model_Interpretor
 {
+    abstract function get($id, $key, $table);
+
     abstract function select();
 }
