@@ -1,7 +1,7 @@
 CREATE TABLE pessoa (
-    id_pessoa INT PRIMARY KEY,
+    id_pessoa INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT,
-    idade INT
+    idade INTEGER
 );
 
 INSERT INTO pessoa (nome, idade) VALUES ('Alice', 26);
