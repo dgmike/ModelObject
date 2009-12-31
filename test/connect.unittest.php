@@ -11,8 +11,21 @@ require_once('PHPUnit/Framework.php');
 
 class ConnectTest extends PHPUnit_Framework_TestCase
 {
+    public $connections;
+
     public function setUp()
     {
+        $this->connections = array(
+                'default' => array(
+                    'dns'  => 'sqlite:banco.db',
+                ),
+                'extra' => array(
+                    'dns'  => $this->_dns('mysql'),
+                    'user' => TEST_MYSQL_USERNAME,
+                    'pass' => TEST_MYSQL_PASSWORD,
+                ),
+            );
+
         if (file_exists('banco.db')) {
             unlink('banco.db');
         }
@@ -77,27 +90,31 @@ class ConnectTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Model_Interpretor_Sqlite', get_class($con->_interpretor));
         $this->assertFileExists('banco.db');
     }
-    
+
     public function testStoredConnection()
     {
-        $connections = array(
-            'default' => array(
-                'dns'  => 'sqlite:banco.db',
-            ),
-            'extra' => array(
-                'dns'  => $this->_dns('mysql'),
-                'user' => TEST_MYSQL_USERNAME,
-                'pass' => TEST_MYSQL_PASSWORD,
-            ),
-        );
-
-        $this->assertTrue(Model_Object::store($connections));
+        $this->assertTrue(Model_Object::store($this->connections));
         $con = new Model_Object('default');
         $this->assertFileExists('banco.db');
         $this->assertEquals('Model_Interpretor_Sqlite', get_class($con->_interpretor));
 
         $con2 = new Model_Object('extra');
         $this->assertEquals('Model_Interpretor_Mysql', get_class($con2->_interpretor));
+    }
+
+    public function testStoredInvalidConnection()
+    {
+        $this->assertTrue(Model_Object::store($this->connections));
+        $this->setExpectedException('Exception');
+        $con = new Model_Object('invalid');
+    }
+
+    public function testPessoa ()
+    {
+        $this->assertTrue(Model_Object::store($this->connections));
+        $m_pessoa = new Pessoa;
+        $this->assertFileExists('banco.db');
+        $this->assertEquals('Model_Interpretor_Mysql', get_class($m_pessoa->_interpretor));
     }
 }
 

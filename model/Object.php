@@ -6,15 +6,20 @@ require_once('Interpretor.php');
 class Model_Object
 {
     static $_stored = array();
+
     public $_con = false;
-    public $_interoretor = false;
+    public $_interpretor = false;
+    public $conection = false;
 
     public function __construct($dns=null, $user=null, $pass=null)
     {
+        if (!$dns AND $this->connection) {
+            $dns = $this->connection;
+        }
         if ($dns and strpos($dns, ':') === false) {
-            //if (!isset(self::$_stored[$dns])) {
-            
-            //}
+            if (!isset(self::$_stored[$dns])) {
+                throw new Exception ('Invalid stored connection: '.$dns);
+            }
             $connection = self::$_stored[$dns] +
                           array('dns' => null, 'user' => null, 'pass' => null);
             foreach (array( 'dns', 'user', 'pass' ) as $item) {

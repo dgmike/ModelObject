@@ -10,6 +10,13 @@ define('DATABASE_DNS',      'sqlite:banco.db');
 define('DATABASE_USERNAME', '');
 define('DATABASE_PASSWORD', '');
 
+require_once('Model/Object.php');
+
+class Pessoa extends Model_Object
+{
+    public $connection = 'extra';
+}
+
 function rodaTest($class)
 {
     if (count($_SERVER['argv'])) {
