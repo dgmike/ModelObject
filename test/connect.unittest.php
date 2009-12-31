@@ -84,7 +84,7 @@ class ConnectTest extends PHPUnit_Framework_TestCase
     {
         $this->assertTrue(Model_Object::store(_connections()));
         $m_pessoa = new Pessoa;
-        $this->assertEquals('Model_Interpretor_Mysql', get_class($m_pessoa->_interpretor));
+        $this->assertEquals('Model_Interpretor_Sqlite', get_class($m_pessoa->_interpretor));
     }
 
     public function testElements()

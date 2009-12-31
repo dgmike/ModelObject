@@ -95,5 +95,7 @@ class Model_Object
             }
         }
         $sql = $this->_interpretor->get($id, $key, $table);
+        $result = $this->_con->query($sql);
+        return $result;
     }
 }
