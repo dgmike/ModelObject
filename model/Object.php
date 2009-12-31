@@ -8,8 +8,17 @@ class Model_Object
     public $_con = false;
     public $_interoretor = false;
 
-    public function __construct($dns, $user=null, $pass=null)
+    public function __construct($dns=null, $user=null, $pass=null)
     {
+        if (!$dns AND defined('DATABASE_DNS')) {
+            $dns = DATABASE_DNS;
+        }
+        if (!$user AND defined('DATABASE_USERNAME')) {
+            $user = DATABASE_USERNAME;
+        }
+        if (!$user AND defined('DATABASE_PASSOWRD')) {
+            $pass = DATABASE_PASSWORD;
+        }
         $this->_interpretor = $this->getInterpretor($dns);
         $this->_con  = new PDO($dns, $user, $pass);
     }

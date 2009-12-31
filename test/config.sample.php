@@ -6,6 +6,10 @@ define('TEST_MYSQL_DATANAME', 'ice');
 define('TEST_MYSQL_USERNAME', 'ice');
 define('TEST_MYSQL_PASSWORD', 'ice');
 
+define('DATABASE_DNS',      'sqlite:banco.db');
+define('DATABASE_USERNAME', '');
+define('DATABASE_PASSWORD', '');
+
 function rodaTest($class)
 {
     if (count($_SERVER['argv'])) {

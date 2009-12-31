@@ -16,6 +16,14 @@ class ConnectTest extends PHPUnit_Framework_TestCase
         if (file_exists('banco.db')) {
             unlink('banco.db');
         }
+        $con = new PDO('sqlite:banco.db');
+        $sql = file_get_contents('banco.sql');
+        foreach (explode(';', $sql) as $instruction) {
+            if (!trim($instruction)) {
+                continue;
+            }
+            $con->exec($instruction);
+        }
     }
 
     public function tearDown()
@@ -50,20 +58,23 @@ class ConnectTest extends PHPUnit_Framework_TestCase
 
     public function testInterpretor()
     {
-        /*
         $con = new Model_Object($this->_dns('mysql'), TEST_MYSQL_USERNAME, TEST_MYSQL_PASSWORD);
         $this->assertEquals('Model_Interpretor_Mysql', get_class($con->_interpretor));
         $con2 = new Model_Object($this->_dns('sqlite'));
         $this->assertEquals('Model_Interpretor_Sqlite', get_class($con2->_interpretor));
-        */
     }
 
     public function testNotInterpretor ()
     {
-        $ar = (get_class_methods($this)); sort($ar); print join("\n", $ar);
         $file = realpath('../model/Interpretor'.DIRECTORY_SEPARATOR.'invalidDriver.php');
-        $this->setExpectedException('Interpretor file not found: '.$file);
+        $this->setExpectedException('Exception');
         $con = new Model_Object('invalidDriver:localhost', 'username', 'password');
+    }
+    
+    public function testConnectDefined ()
+    {
+        $con = new Model_Object;
+        $this->assertEquals('Model_Interpretor_Sqlite', get_class($con->_interpretor));
     }
 }
 
