@@ -1,5 +1,5 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
+/* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker ff=unix: */
 
 class Model_Interpretor_Sqlite extends Model_Interpretor
 {
