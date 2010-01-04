@@ -37,25 +37,29 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @category   Database Mapper
- * @package    Model Object
- * @author     Michael Granados <michael@pontovermelho.com.br>
- * @copyright  2009-2010 Michael Granados <michael@pontovermelho.com.br>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.0
+ * PHP version 5
+ *
+ * @category  Database_Mapper
+ * @package   Model_Object
+ * @author    Michael Granados <michael@pontovermelho.com.br>
+ * @copyright 2009-2010 Michael Granados <michael@pontovermelho.com.br>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   SVN: <snv_id>
+ * @link      http://github.com/dgmike/Model_Object
  */
 
-require_once('Interpretor.php');
+require_once 'Interpretor.php';
 
 /**
  * Model_Object
  *
- * @category   Database Mapper
- * @package    Model Object
- * @author     Michael Granados <michael@pontovermelho.com.br>
- * @copyright  2009-2010 Michael Granados <michael@pontovermelho.com.br>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.0
+ * @category  Database_Mapper
+ * @package   Model_Object
+ * @author    Michael Granados <michael@pontovermelho.com.br>
+ * @copyright 2009-2010 Michael Granados <michael@pontovermelho.com.br>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: 1.0.0
+ * @link      http://github.com/dgmike/Model_Object
  */
 class Model_Object
 {
@@ -71,14 +75,14 @@ class Model_Object
      *
      * @var    PDO Object
      */
-    public $_con         = false;
+    private $_con         = false;
 
     /**
      * Interpretor to diferents databases
      *
      * @var    Model Interpretor Object
      */
-    public $_interpretor = false;
+    private $_interpretor = false;
 
     /**
      * Name of stored connection to use by default @see Model_Object::store
@@ -143,8 +147,8 @@ class Model_Object
      * $con = new Model_Object;
      * </code>
      *
-     * Use extended Object whit pre-defined stored connection
-     * @see Model_Object::store()
+     * Use extended Object whit pre-defined stored connection @see 
+     * Model_Object::store()
      *
      * <code>
      * <?php
@@ -170,12 +174,12 @@ class Model_Object
      * $con2 = new Phone;
      * </code>
      *
-     * @use Model_Object::setKey()
-     * @use Model_Object::setTable()
+     * @param string $dns  DNS to connect to database
+     * @param string $user User to connect to database (optional)
+     * @param string $pass Password to connect to database (optional)
      *
-     * @param string $dns
-     * @param string $user
-     * @param string $pass
+     * @uses Model_Object::setKey()
+     * @uses Model_Object::setTable()
      */
     public function __construct($dns=null, $user=null, $pass=null)
     {
@@ -207,7 +211,8 @@ class Model_Object
     /**
      * Sets the table to manipulate with this object
      *
-     * @param  string $table The table name (optional)
+     * @param string $table The table name (optional)
+     *
      * @return string
      */
     public function setTable($table = null)
@@ -225,7 +230,8 @@ class Model_Object
     /**
      * Sets the key to manipulate the table with this object
      *
-     * @param  string $key The key to manipulate the table (optional)
+     * @param string $key The key to manipulate the table (optional)
+     *
      * @return string
      */
     public function setKey($key = null)
@@ -240,6 +246,14 @@ class Model_Object
         return $this->key;
     }
 
+    /**
+     * Includes and initializates the interpretor for dns informed. The 
+     * interpretor is a class contained in Interpretor path.
+     *
+     * @param string $dns DNS string to connect on database
+     *
+     * @return object
+     */
     public function getInterpretor ($dns)
     {
         $interpretor = 'interpretor_'.reset(explode(':', $dns));
@@ -252,7 +266,7 @@ class Model_Object
         if (!file_exists($file)) {
             throw new Exception ('Interpretor file not found: '.$file);
         }
-        require_once($file);
+        include_once $file;
         // Sets the interepretor
         $interpretor = 'Model_'
                        .str_replace(DIRECTORY_SEPARATOR, '_', $interpretor);
@@ -263,8 +277,8 @@ class Model_Object
     }
 
     /**
-     * Stores news connections settings to easy use to connect on server.
-     * @see Model_Object::__construct()
+     * Stores news connections settings to easy use to connect on server. @see 
+     * Model_Object::__construct()
      *
      * You need to pass an assossiative array with your settings where 
      * the key is the name you use to connect and the settings are in the
@@ -316,6 +330,7 @@ class Model_Object
      * </code>
      *
      * @param array $connections An assossiative array with settings
+     *
      * @return bool
      */
     static function store (array $connections = array())
@@ -324,6 +339,15 @@ class Model_Object
         return true;
     }
 
+    /**
+     * Gets a row of table
+     *
+     * @param string $id    Id for select
+     * @param string $table Table to select
+     * @param string $key   Key to use to select
+     *
+     * @return object Model_Result
+     */
     public function get($id, $table = null, $key = null)
     {
         foreach (array('table', 'key') as $item) {
