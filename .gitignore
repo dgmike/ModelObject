@@ -1,2 +1,4 @@
 config.php
 *.swp
+/vendor
+/composer.phar
