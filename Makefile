@@ -1,5 +1,8 @@
 PHPBIN := php
 COMPOSER := ${PHPBIN} composer.phar
+PHPUNIT := "./vendor/bin/phpunit"
+
+.PHONY: test
 
 composer.phar:
 	${PHPBIN} -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -9,3 +12,6 @@ composer.phar:
 
 vendor: composer.phar
 	${COMPOSER} install
+
+test: vendor
+	${PHPUNIT} --bootstrap vendor/autoload.php tests

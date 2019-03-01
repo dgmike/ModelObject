@@ -1,4 +1,5 @@
 <?php
+
 namespace Model\Interpretor;
 
 use Model\InterpretorInterface;

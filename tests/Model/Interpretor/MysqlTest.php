@@ -3,9 +3,6 @@
 namespace Test\Model\Interpretor;
 use PHPUnit\Framework\TestCase;
 
-/**
- * InterpretorTest
- */
 class MysqlTest extends TestCase
 {
     public function instance(): \Model\Interpretor\Mysql
