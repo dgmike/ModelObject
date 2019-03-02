@@ -1,8 +1,8 @@
 <?php
 
 namespace Model;
-
 use PDO;
+use Exception;
 
 class Connection {
     private static $configurations = [];
@@ -11,7 +11,7 @@ class Connection {
     static public function addConfiguration(String $name, Configuration $configuration): void
     {
         if (array_key_exists($name, self::$configurations)) {
-            $errorMessage = sprinf('Configruation "%s" is already defined', $name);
+            $errorMessage = sprintf('Configruation "%s" is already defined', $name);
             throw new Exception($errorMessage, 1);
         }
 
@@ -24,19 +24,19 @@ class Connection {
         unset(self::$configurations[$name]);
     }
 
-    static public function setConfiguration($configuration): void
+    static public function setConfiguration(array $configuration): void
     {
         self::$configurations = $configuration;
     }
 
-    static public function getConfiguration($name): Configuration
+    static public function getConfiguration(string $name): Configuration
     {
-        if (array_key_exists($name, self::$configurations)) {
-            $errorMessage = sprinf('Configruation "%s" is not defined', $name);
+        if (!array_key_exists($name, self::$configurations)) {
+            $errorMessage = sprintf('Configruation "%s" is not defined', $name);
             throw new Exception($errorMessage, 1);
         }
 
-        self::$configurations[$name];
+        return self::$configurations[$name];
     }
 
     static public function setConnection(string $name, Configuration $configuration): void
@@ -62,7 +62,7 @@ class Connection {
     static public function destroyConnection($name): void
     {
         if (!array_key_exists($name, self::$connections)) {
-            $errorMessage = sprinf('Connection "%s" is not defined', $name);
+            $errorMessage = sprintf('Connection "%s" is not defined', $name);
             throw new Exception($errorMessage, 1);
         }
 
